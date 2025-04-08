@@ -1,0 +1,17 @@
+cd build/circuits
+
+# 创建input.json，使用我们之前计算的值
+echo '{
+  "nullifier": "123",
+  "hasher": "9904028930859697121695025471312564917337032846528014134060777877259199866166"
+}' > input.json
+
+
+# 使用generate_witness.js生成witness
+node police_verify_js/generate_witness.js police_verify_js/police_verify.wasm input.json witness.wtns
+
+# 使用zkey生成proof
+snarkjs groth16 prove police_verify_final.zkey
+
+# 生成solidity调用数据
+snarkjs zkey export soliditycalldata public.json proof.json

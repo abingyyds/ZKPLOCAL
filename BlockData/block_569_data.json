@@ -1,0 +1,49 @@
+{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "result": {
+        "hash": "0xc10c391a462b729d7fd2f66d4f4bb384f43489426f32caf03a649d214dc70f5b",
+        "parentHash": "0x1a4be0726ec96ba61b8a4d9a9f032fffa97ab1f80dcc15a26da56eda09fa316b",
+        "sha3Uncles": "0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347",
+        "miner": "0x0000000000000000000000000000000000000000",
+        "stateRoot": "0xba2e0f5ded796b762ef065d5b7361addbc8c03c50adb7e7e2aed66efcfd796de",
+        "transactionsRoot": "0xdc4a795e1e0e7bc8dbfa3b925adbecdc56d55e99a9a25b0bf661d0e62d96499a",
+        "receiptsRoot": "0x9dccfe7306d1d67002e358dda6c197f1cc5c745c156651c791cfc344d0c823ff",
+        "logsBloom": "0x00000000000000800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000020000002000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000000000000080004000000000000000000000000000000000000000000000800000000000000000000000000000000",
+        "difficulty": "0x0",
+        "number": "0x239",
+        "gasLimit": "0x6691b7",
+        "gasUsed": "0x13303",
+        "timestamp": "0x67c2e781",
+        "extraData": "0x",
+        "mixHash": "0x6a7d7d2a4927ddb4f7475dd3892c1eb5b7d4c885631abc1b0163899dfd325196",
+        "nonce": "0x0000000000000000",
+        "totalDifficulty": "0x0",
+        "baseFeePerGas": "0x8",
+        "size": "0x31e",
+        "transactions": [
+            {
+                "type": "0x2",
+                "hash": "0x0809f40cf1c93320d47efd0b65707bdb1d0a3f98b9b890210c8bbc0917818d60",
+                "chainId": "0x539",
+                "nonce": "0x238",
+                "blockHash": "0xc10c391a462b729d7fd2f66d4f4bb384f43489426f32caf03a649d214dc70f5b",
+                "blockNumber": "0x239",
+                "transactionIndex": "0x0",
+                "from": "0x45bb8a0a361e52108525b6edfb7fc899752acfeb",
+                "to": "0x42fffbb5056b47621b149d16def5b6fa933502f9",
+                "value": "0x0",
+                "maxPriorityFeePerGas": "0x51f4d5c00",
+                "maxFeePerGas": "0x51f4d5c00",
+                "gasPrice": "0x51f4d5c00",
+                "gas": "0x1706a",
+                "input": "0x1701bac20000000000000000000000000000000000000000000000000000000000000040195ecbe8cd134a7fb46239d5b5ce15beb6c966fc21b65c30e35a9add78af65a20000000000000000000000000000000000000000000000000000000000000002233a00a8dc20687363b92689320e6e1c2525f9063a886faeb3ec18e2c7bb170e43fd213549ff09a7f361654d13fa433b2688eea585551c564647fdcc46f2ce8e",
+                "accessList": [],
+                "v": "0x1",
+                "r": "0x2099f42a51c5052a7e8ef090d0bde7a65a66a9f3ff261bca53ef3789ed3cb672",
+                "s": "0x50f5d799ae1125045838c307261b67e0c7d368e4310229d4affbd96c61ac5be1"
+            }
+        ],
+        "uncles": []
+    }
+}

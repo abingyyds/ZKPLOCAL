@@ -1,0 +1,25 @@
+{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "result": {
+        "type": "0x2",
+        "hash": "0xdd66ff3f16f8bd1afbd558d30eb14b63a0fce4eca17d86d3c0ae7a594704e280",
+        "chainId": "0x539",
+        "nonce": "0x29c",
+        "blockHash": "0x02ecf715d71d323957a7037f9859557d8636cc99fd3280f944ef6d941083eda8",
+        "blockNumber": "0x29d",
+        "transactionIndex": "0x0",
+        "from": "0x45bb8a0a361e52108525b6edfb7fc899752acfeb",
+        "to": "0x42fffbb5056b47621b149d16def5b6fa933502f9",
+        "value": "0x0",
+        "maxPriorityFeePerGas": "0x3b9aca00",
+        "maxFeePerGas": "0x3b9aca10",
+        "gasPrice": "0x3b9aca08",
+        "gas": "0x4c4b40",
+        "input": "0x4a5793a42e9d0a2aff2f7854f20332e3c7c1a66aa16f2a707671962363912af1c0f7e637064377f552a3cc29468b34ae5b5fb541de81e0f9c544eb4c1a2625911e15687d2228089d5617adc9db4d8cbbdbc9beec98e1e93770bc1efb070892dac75056580a8a43b8b7b3d252fda47b8930a5aa8c145a5bf6c7059403b56d58c64f7332041b0d59cafae58ff1aabe5a20d76a11b377c6a5b56face10f9924d60f45c6e1eb0f486687cf0238c18046ebd65a9c07032ba1a0d97b864d9e648710e3924b63161073859a7725dd2abbfdc7e0f7827695218eb7b53b2589a5fbae4c42a5ea6d892d123aa0f15c0e2e1f8b997db44a0e971e534e62305ffb6754be0cb6d483d974195ecbe8cd134a7fb46239d5b5ce15beb6c966fc21b65c30e35a9add78af65a2",
+        "accessList": [],
+        "v": "0x0",
+        "r": "0x539738e37564745b22b51ed7fadf08a665bf83625bf9218f5fe349736dc5dda5",
+        "s": "0xccc9e509a574ba365248c9884387b54d8e17c0dac10609c6cc02d069df6af00"
+    }
+}
