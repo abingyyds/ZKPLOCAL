@@ -14,7 +14,7 @@ async function main() {
         logger.info("开始部署 CA 合约...");
 
         // 初始的 Merkle 根
-        const initialMerkleRoot = "0x0000000000000000000000000000000000000000000000000000000000000000";
+        const initialMerkleRoot = "0x70feb51e8972c3cad0bf9d99c51926c14c95a17b02fcaf70e6827cb39093323c";
 
         // 获取合约工厂
         const CA = await ethers.getContractFactory("MerkleTreeWhitelist");

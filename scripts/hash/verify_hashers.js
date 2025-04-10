@@ -1,19 +1,35 @@
 const fs = require('fs');
 const path = require('path');
 const { ethers } = require('ethers');
-const { abi } = require('../../contracts/abi/CA.json');
 
 // 配置
 const CONFIG = {
     RPC_URL: "http://127.0.0.1:7545",
-    CONTRACT_ADDRESS: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+    CONTRACT_ADDRESS: "0x3106962C2df0695CC7C089d3a1a0a441BEA2D10E",
     PRIVATE_KEY: "0x433f031528ea6630862c63d5cb5678af45bae9f876dcc307abfa5d753a4c7f4e",
 };
+
+// 合约ABI
+const ABI = [
+    "function verifyAndUseHasher(uint[2] calldata a, uint[2][2] calldata b, uint[2] calldata c, uint[1] calldata input) external returns (bool)",
+    "function isHasherSet(bytes32 _hasher) external view returns (bool)",
+    "function getAllHashers() external view returns (bytes32[] memory)",
+    "function updateMerkleRoot(bytes32 _newRoot) external",
+    "function uploadHasher(bytes32[] calldata proof, bytes32 _hasher) external",
+    "function owner() external view returns (address)",
+    "function merkleRoot() external view returns (bytes32)",
+    "function verifier() external view returns (address)",
+    "event MerkleRootUpdated(bytes32 oldRoot, bytes32 newRoot)",
+    "event HasherMappingUpdated(bytes32 indexed hasher, bool status)",
+    "event HasherStatusChanged(bytes32 indexed hasher, bool newStatus)",
+    "event VerificationResult(bytes32 indexed hasher, bool isValid, bool hasherAvailable)",
+    "event ReplayAttackAttempt(bytes32 indexed hasher, address attacker, uint256 timestamp, string reason)"
+];
 
 // 初始化provider和wallet
 const provider = new ethers.JsonRpcProvider(CONFIG.RPC_URL);
 const wallet = new ethers.Wallet(CONFIG.PRIVATE_KEY, provider);
-const contract = new ethers.Contract(CONFIG.CONTRACT_ADDRESS, abi, wallet);
+const contract = new ethers.Contract(CONFIG.CONTRACT_ADDRESS, ABI, wallet);
 
 function parseSolidityData(solidityData) {
     try {
@@ -64,13 +80,31 @@ async function verifyHashers() {
         const results = [];
         
         // 设置事件监听器
-        contract.on("VerificationResult", (hasher, isValid, hasherExists, event) => {
+        contract.on("VerificationResult", (hasher, isValid, hasherAvailable, event) => {
             const verificationTime = Date.now();
-            console.log(`收到验证事件:`);
+            console.log(`\n[验证事件]`);
             console.log(`- Hasher: ${hasher}`);
             console.log(`- 验证是否有效: ${isValid}`);
-            console.log(`- Hasher是否存在: ${hasherExists}`);
+            console.log(`- Hasher是否可用: ${hasherAvailable}`);
             console.log(`- 事件时间: ${verificationTime}ms`);
+        });
+        
+        contract.on("ReplayAttackAttempt", (hasher, attacker, timestamp, reason, event) => {
+            console.log(`\n[重放攻击事件]`);
+            console.log(`- Hasher: ${hasher}`);
+            console.log(`- 攻击者: ${attacker}`);
+            console.log(`- 时间戳: ${new Date(timestamp * 1000).toLocaleString()}`);
+            console.log(`- 原因: ${reason}`);
+            console.log(`- 区块号: ${event.blockNumber}`);
+            console.log(`- 交易哈希: ${event.transactionHash}`);
+        });
+        
+        contract.on("HasherStatusChanged", (hasher, newStatus, event) => {
+            console.log(`\n[Hasher状态变更事件]`);
+            console.log(`- Hasher: ${hasher}`);
+            console.log(`- 新状态: ${newStatus ? '可用' : '已使用'}`);
+            console.log(`- 区块号: ${event.blockNumber}`);
+            console.log(`- 交易哈希: ${event.transactionHash}`);
         });
         
         for (const item of hashersToVerify) {
@@ -78,36 +112,82 @@ async function verifyHashers() {
             console.log(`\n验证 Hasher: ${item.hasher}`);
             
             try {
+                // 先检查hasher是否存在
+                const checkStart = Date.now();
+                const hasherExists = await contract.isHasherSet(item.hasher);
+                const checkTime = Date.now() - checkStart;
+                
+                if (!hasherExists) {
+                    const result = {
+                        hasher: item.hasher,
+                        timings: {
+                            totalTime: Date.now() - startTime,
+                            checkHasherTime: checkTime,
+                            proofVerificationTime: 0
+                        },
+                        status: 'failed',
+                        reason: 'hasher不存在',
+                        earlyExit: true
+                    };
+                    
+                    console.log('快速验证结果:');
+                    console.log(`- 检查hasher耗时: ${checkTime}ms`);
+                    console.log(`- 原因: hasher不存在，无需进行ZKP验证`);
+                    
+                    // 在后台发送交易
+                    (async () => {
+                        try {
+                            const [a, b, c, input] = parseSolidityData(item.solidityData);
+                            const tx = await contract.verifyAndUseHasher(a, b, c, input);
+                            console.log(`验证失败交易已发送，哈希: ${tx.hash}`);
+                            const receipt = await tx.wait();
+                            console.log(`交易已确认，区块号: ${receipt.blockNumber}`);
+                        } catch (error) {
+                            console.error('交易发送失败:', error.message);
+                        }
+                    })();
+                    
+                    results.push(result);
+                    continue;
+                }
+                
                 // 解析solidityData
                 const [a, b, c, input] = parseSolidityData(item.solidityData);
                 
-                // 直接验证零知识证明
+                // 使用callStatic模拟验证
                 const proofStartTime = Date.now();
-                const tx = await contract.verifyAndUseHasher(
-                    a,  // uint[2]
-                    b,  // uint[2][2]
-                    c,  // uint[2]
-                    input  // uint[1]
-                );
-                
-                // 交易发送时间
-                const txSentTime = Date.now();
+                const isValid = await contract.verifyAndUseHasher.staticCall(a, b, c, input);
+                const proofTime = Date.now() - proofStartTime;
                 
                 const result = {
                     hasher: item.hasher,
                     timings: {
-                        totalTime: txSentTime - startTime,
-                        proofVerificationTime: txSentTime - proofStartTime
+                        totalTime: Date.now() - startTime,
+                        checkHasherTime: checkTime,
+                        proofVerificationTime: proofTime
                     },
-                    status: 'success',
-                    transactionHash: tx.hash
+                    status: isValid ? 'success' : 'failed',
+                    reason: isValid ? '验证成功' : '零知识证明无效',
+                    earlyExit: false
                 };
                 
-                console.log('交易已发送!');
-                console.log('时间统计:');
+                console.log('验证结果:');
+                console.log(`- 检查hasher耗时: ${checkTime}ms`);
+                console.log(`- ZKP验证耗时: ${proofTime}ms`);
                 console.log(`- 总耗时: ${result.timings.totalTime}ms`);
-                console.log(`- 证明验证耗时: ${result.timings.proofVerificationTime}ms`);
-                console.log(`- 交易哈希: ${result.transactionHash}`);
+                console.log(`- 状态: ${result.reason}`);
+                
+                // 在后台发送交易
+                (async () => {
+                    try {
+                        const tx = await contract.verifyAndUseHasher(a, b, c, input);
+                        console.log(`验证交易已发送，哈希: ${tx.hash}`);
+                        const receipt = await tx.wait();
+                        console.log(`交易已确认，区块号: ${receipt.blockNumber}`);
+                    } catch (error) {
+                        console.error('交易发送失败:', error.message);
+                    }
+                })();
                 
                 results.push(result);
                 
@@ -119,7 +199,8 @@ async function verifyHashers() {
                         totalTime: endTime - startTime
                     },
                     status: 'failed',
-                    error: error.message
+                    error: error.message,
+                    earlyExit: false
                 };
                 
                 console.log('验证失败:', error.message);
@@ -140,8 +221,10 @@ async function verifyHashers() {
         // 等待几秒钟以确保所有事件都被接收
         await new Promise(resolve => setTimeout(resolve, 5000));
         
-        // 移除事件监听器
+        // 移除所有事件监听器
         contract.removeAllListeners("VerificationResult");
+        contract.removeAllListeners("ReplayAttackAttempt");
+        contract.removeAllListeners("HasherStatusChanged");
         
     } catch (error) {
         console.error('验证过程出错:', error);

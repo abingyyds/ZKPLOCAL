@@ -40,7 +40,7 @@ async function generateRandomNumber() {
 
 async function main() {
     try {
-        const total = 10;
+        const total = 100;
         const allData = [];
         
         logger.info(`开始生成 ${total} 个哈希值和证明...`);
@@ -83,8 +83,21 @@ async function main() {
                 // 2.4 生成Solidity调用数据
                 logger.info("\n=== 3. 生成Solidity调用数据 ===");
                 const solidityData = await runCommand('snarkjs zkey export soliditycalldata public.json proof.json', circuitsDir);
+                
+                // 清理和格式化solidityData，只保留纯数字
+                const cleanData = solidityData
+                    .split('\n')          // 按换行符分割
+                    .map(line => line.trim()) // 清理每行的空格
+                    .join('')             // 重新连接，不添加任何分隔符
+                    .replace(/\s+/g, '')  // 移除所有空格
+                    .replace(/"/g, '')    // 移除引号
+                    .replace(/0x/g, '')   // 移除0x前缀
+                    .replace(/\[/g, '')   // 移除左括号
+                    .replace(/\]/g, '')   // 移除右括号
+                    .trim();              // 移除首尾空格
+                
                 logger.info("\n=== Remix调用参数（直接复制使用）===");
-                logger.info(solidityData);
+                logger.info(cleanData);
 
                 // 2.5 读取生成的证明
                 const proofPath = path.join(circuitsDir, "proof.json");
@@ -98,7 +111,7 @@ async function main() {
                     ...hashData,
                     proof: proof,
                     public: public,
-                    solidityData: solidityData
+                    solidityData: cleanData
                 };
                 
                 allData.push(result);

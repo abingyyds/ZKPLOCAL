@@ -6,7 +6,7 @@ const { abi } = require('../../contracts/abi/CA.json');
 // 配置
 const CONFIG = {
     RPC_URL: "http://127.0.0.1:7545",
-    CONTRACT_ADDRESS: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+    CONTRACT_ADDRESS: "0x3106962C2df0695CC7C089d3a1a0a441BEA2D10E",
     PRIVATE_KEY: "0x433f031528ea6630862c63d5cb5678af45bae9f876dcc307abfa5d753a4c7f4e",
     BATCH_SIZE: 10
 };

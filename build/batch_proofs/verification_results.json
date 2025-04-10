@@ -2,91 +2,111 @@
   {
     "hasher": "0x2010e226f71a6c5555bebcc627d6483a7de62b9687eb91b29a16c6d3d474f869",
     "timings": {
-      "totalTime": 130,
-      "proofVerificationTime": 130
+      "totalTime": 434,
+      "checkHasherTime": 51,
+      "proofVerificationTime": 383
     },
     "status": "success",
-    "transactionHash": "0xf82eb998cc9f9d05a72db11a9fed8501363c66cbf69b14caef08153294fba1fc"
+    "reason": "验证成功",
+    "earlyExit": false
   },
   {
     "hasher": "0x155e37dfe69614907d8f06cd62fb17d4659c15dcc9e35f0cf19af75483e855fe",
     "timings": {
-      "totalTime": 132,
-      "proofVerificationTime": 132
+      "totalTime": 578,
+      "checkHasherTime": 207,
+      "proofVerificationTime": 371
     },
     "status": "success",
-    "transactionHash": "0x15e59e45333ceced0a72288fd4d3d1df3f307948bb60488f96cac7a7bac48c3f"
+    "reason": "验证成功",
+    "earlyExit": false
   },
   {
     "hasher": "0x18211428eabef9fb9350efc7ad64fe0fdae2eb3e52c363a0780d3777bfc8d32a",
     "timings": {
-      "totalTime": 138,
-      "proofVerificationTime": 137
+      "totalTime": 532,
+      "checkHasherTime": 158,
+      "proofVerificationTime": 374
     },
     "status": "success",
-    "transactionHash": "0x21af59fa7ee399ab2a19580250bd58cef536ade2e074e5c90d7dacf3560521c0"
+    "reason": "验证成功",
+    "earlyExit": false
   },
   {
     "hasher": "0x179d8a25cb265de653dadb990e9d285f2ea91a61a15e1da3a1777dac7fad316b",
     "timings": {
-      "totalTime": 121,
-      "proofVerificationTime": 121
+      "totalTime": 535,
+      "checkHasherTime": 158,
+      "proofVerificationTime": 377
     },
     "status": "success",
-    "transactionHash": "0x68e89b1f9a8587ce93b79f0cbb32a059069b8aa78ebd4863c3e8ed441f4b369f"
+    "reason": "验证成功",
+    "earlyExit": false
   },
   {
     "hasher": "0x20854149f07c61b22a7b8a1aa935e68560526cae33b7566863d8fe58b584159e",
     "timings": {
-      "totalTime": 120,
-      "proofVerificationTime": 120
+      "totalTime": 539,
+      "checkHasherTime": 156,
+      "proofVerificationTime": 383
     },
     "status": "success",
-    "transactionHash": "0xeeae77f152e89f07cfbcf792a86a624e43b9ee7bf94197ab74da380fb5aa1ace"
+    "reason": "验证成功",
+    "earlyExit": false
   },
   {
     "hasher": "0x1a80f456553acb5473a615a72d63b9e809a3b6209c964d06073e349f8b9f3b94",
     "timings": {
-      "totalTime": 130,
-      "proofVerificationTime": 129
+      "totalTime": 549,
+      "checkHasherTime": 175,
+      "proofVerificationTime": 374
     },
     "status": "success",
-    "transactionHash": "0x04b55646e23b65ed86a1dbd67c2da9063a7f59b86e1b2a6c06a3966c19b9f289"
+    "reason": "验证成功",
+    "earlyExit": false
   },
   {
     "hasher": "0x196d7ad4d886a7663a1b8ad2939627837b642edb8aef6e175bd51d67a92aeda7",
     "timings": {
-      "totalTime": 162,
-      "proofVerificationTime": 162
+      "totalTime": 575,
+      "checkHasherTime": 157,
+      "proofVerificationTime": 417
     },
     "status": "success",
-    "transactionHash": "0x516ca93821ca200390e75b8cc7959766887d78371f71753cee1477b399dd2737"
+    "reason": "验证成功",
+    "earlyExit": false
   },
   {
     "hasher": "0x0f9278a555873d1e8624db84f141597661466a58332f8a4d84efb8eb0e9041e6",
     "timings": {
-      "totalTime": 138,
-      "proofVerificationTime": 138
+      "totalTime": 584,
+      "checkHasherTime": 217,
+      "proofVerificationTime": 367
     },
     "status": "success",
-    "transactionHash": "0xec32ee2dc0368479ad4738af4ec82ef1480a72ecaa57d1d9b8e90c35b893df98"
+    "reason": "验证成功",
+    "earlyExit": false
   },
   {
     "hasher": "0x24791744389375c72152e1e1eb978381ee009f0f884ebceaa3918330ade380fa",
     "timings": {
-      "totalTime": 123,
-      "proofVerificationTime": 122
+      "totalTime": 534,
+      "checkHasherTime": 163,
+      "proofVerificationTime": 371
     },
     "status": "success",
-    "transactionHash": "0x5de2e07a8b7952fc403b6a6b976f14a16ebc659ddbbbcf25bbcc026d1b0861c8"
+    "reason": "验证成功",
+    "earlyExit": false
   },
   {
     "hasher": "0x2b2c2072df6ce9560b05bccb8c58489d4b0dbe6e3e9f6aede44d3f18dbcb5a7b",
     "timings": {
-      "totalTime": 116,
-      "proofVerificationTime": 115
+      "totalTime": 533,
+      "checkHasherTime": 154,
+      "proofVerificationTime": 379
     },
     "status": "success",
-    "transactionHash": "0x7f9bffdfe3d340db2da54550ad943c7b7b0e9bb4132e5af11712698ba480e9a8"
+    "reason": "验证成功",
+    "earlyExit": false
   }
 ]

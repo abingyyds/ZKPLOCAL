@@ -22,7 +22,7 @@ contract MerkleTreeWhitelist {
     // 当前 Merkle 树的根哈希值
     bytes32 public merkleRoot;
 
-    // 用于存储 hasher(nullifier) 值的映射，标记为 true 表示已使用
+    // 用于存储 hasher(nullifier) 值的映射，true表示可用，false表示已使用
     mapping(bytes32 => bool) public hasherMapping;
     // 存储所有上传的 hasher(nullifier) 值的数组，方便检索
     bytes32[] public allHashers;
@@ -36,7 +36,14 @@ contract MerkleTreeWhitelist {
     event HasherMappingUpdated(bytes32 indexed hasher, bool status);
     event HasherStatusChanged(bytes32 indexed hasher, bool newStatus);
     // 新增：验证结果事件
-    event VerificationResult(bytes32 indexed hasher, bool isValid, bool hasherExists);
+    event VerificationResult(bytes32 indexed hasher, bool isValid, bool hasherAvailable);
+    // 新增：重放攻击事件
+    event ReplayAttackAttempt(
+        bytes32 indexed hasher,
+        address attacker,
+        uint256 timestamp,
+        string reason
+    );
 
     // 错误定义
     error ZKPVerificationFailed();
@@ -69,9 +76,6 @@ contract MerkleTreeWhitelist {
         bytes32 leaf = keccak256(abi.encodePacked(msg.sender));
         require(MerkleProof.verify(proof, merkleRoot, leaf), "Invalid Merkle proof");
 
-        // 确保 hasher 尚未被设置
-        require(!hasherMapping[_hasher], "Hasher is already set");
-
         // 记录 hasher 并发出事件
         hasherMapping[_hasher] = true;
         allHashers.push(_hasher);
@@ -87,30 +91,48 @@ contract MerkleTreeWhitelist {
     ) external returns (bool) {
         bytes32 hasher = bytes32(input[0]);
         
-        // 1. 先验证ZKP
-        bool isValid = verifier.verifyProof(a, b, c, input);
+        // 1. 检查hasher是否可用
+        bool hasherAvailable = hasherMapping[hasher];
         
-        // 2. 检查hasher是否存在
-        bool hasherExists = hasherMapping[hasher];
-        
-        // 3. 发出验证结果事件
-        emit VerificationResult(hasher, isValid, hasherExists);
-        
-        // 4. 如果验证失败或hasher不存在，返回false但不回滚交易
-        if (!isValid || !hasherExists) {
+        // 2. 如果hasher不可用，直接返回false
+        if (!hasherAvailable) {
+            emit ReplayAttackAttempt(
+                hasher,
+                msg.sender,
+                block.timestamp,
+                "Hasher already used"
+            );
+            emit VerificationResult(hasher, false, hasherAvailable);
             return false;
         }
         
-        // 5. 验证成功，执行上链操作
+        // 3. 验证ZKP
+        bool isValid = verifier.verifyProof(a, b, c, input);
+        
+        // 4. 发出验证结果事件
+        emit VerificationResult(hasher, isValid, hasherAvailable);
+        
+        // 5. 如果验证失败，返回false
+        if (!isValid) {
+            emit ReplayAttackAttempt(
+                hasher,
+                msg.sender,
+                block.timestamp,
+                "Invalid ZKP proof"
+            );
+            return false;
+        }
+        
+        // 6. 验证成功，标记hasher已使用
         hasherMapping[hasher] = false;
         emit HasherStatusChanged(hasher, false);
         
         return true;
     }
 
-    // 查看函数：检查特定的 hasher(nullifier) 是否已被设置
+    // 查看函数：检查特定的 hasher(nullifier) 是否可用
     function isHasherSet(bytes32 _hasher) external view returns (bool) {
-        return hasherMapping[_hasher]; // 如果 hasher 存在于映射中则返回 true
+        return hasherMapping[_hasher]; // 直接返回hasher是否可用
     }
 
     // 查看函数：获取所有已上传的 hasher(nullifier) 值
